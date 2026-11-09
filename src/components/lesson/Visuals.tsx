@@ -101,6 +101,55 @@ function SiPrefixes() {
   );
 }
 
+/** Colores aproximados del indicador universal (pH 0–14). Son datos del indicador, no del tema. */
+const PH_COLORS = ['#D7263D', '#E4572E', '#F17C2B', '#F5A623', '#F8C630', '#F2E94E', '#C5E063', '#7BC950', '#3FA34D', '#2E86AB', '#2364AA', '#3D348B', '#5B2A86', '#7A1F7A', '#4B1248'];
+
+const PH_EXAMPLES: [number, string][] = [
+  [2, 'Jugo gástrico'],
+  [5, 'Café'],
+  [7.4, 'Sangre'],
+  [10, 'Jabón'],
+];
+
+/** Escala de pH con ejemplos y, opcionalmente, un marcador en `value`. */
+export function PhScale({ value }: { value?: number }) {
+  const { colors } = useTheme();
+  const w = 300 / 15;
+  const x = (ph: number) => 10 + (ph + 0.5) * w;
+  return (
+    <Svg width="100%" height={96} viewBox="0 0 320 96" accessibilityLabel={value === undefined ? 'Escala de pH de 0 a 14' : `Escala de pH, marcador en ${value.toFixed(2)}`}>
+      {PH_COLORS.map((c, i) => (
+        <Fragment key={i}>
+          <Rect x={10 + i * w} y={30} width={w} height={22} fill={c} />
+          <SvgText x={10 + i * w + w / 2} y={66} fill={colors.text} fontSize={10} textAnchor="middle">
+            {String(i)}
+          </SvgText>
+        </Fragment>
+      ))}
+      {PH_EXAMPLES.map(([ph, label], i) => (
+        <Fragment key={label}>
+          <Line x1={x(ph)} y1={i % 2 ? 22 : 12} x2={x(ph)} y2={30} stroke={colors.textMuted} strokeWidth={1} />
+          <SvgText x={x(ph)} y={i % 2 ? 20 : 10} fill={colors.textMuted} fontSize={9} textAnchor="middle">
+            {label}
+          </SvgText>
+        </Fragment>
+      ))}
+      <SvgText x={10} y={86} fill={colors.text} fontSize={10}>
+        ← Ácido
+      </SvgText>
+      <SvgText x={160} y={86} fill={colors.text} fontSize={10} textAnchor="middle">
+        Neutro (7)
+      </SvgText>
+      <SvgText x={310} y={86} fill={colors.text} fontSize={10} textAnchor="end">
+        Básico →
+      </SvgText>
+      {value !== undefined && (
+        <Rect x={x(Math.min(14, Math.max(0, value))) - 2} y={26} width={4} height={30} fill={colors.text} />
+      )}
+    </Svg>
+  );
+}
+
 const VISUALS: Record<string, { render: () => ReactElement; limits: string }> = {
   'states-of-matter': {
     render: () => <StatesOfMatter />,
@@ -113,6 +162,10 @@ const VISUALS: Record<string, { render: () => ReactElement; limits: string }> = 
   'si-prefixes': {
     render: () => <SiPrefixes />,
     limits: 'Solo se muestran los prefijos más usados en química y medicina.',
+  },
+  'ph-scale': {
+    render: () => <PhScale />,
+    limits: 'Valores típicos a 25 °C; en disoluciones muy concentradas el pH puede salir de 0–14 y los colores del indicador son aproximados.',
   },
 };
 

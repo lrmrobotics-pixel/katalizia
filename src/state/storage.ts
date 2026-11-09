@@ -10,4 +10,5 @@ export const STORE_KEYS = {
   learning: 'katalizia:learning',
   rewards: 'katalizia:rewards',
   pet: 'katalizia:pet',
+  sync: 'katalizia:sync',
 } as const;

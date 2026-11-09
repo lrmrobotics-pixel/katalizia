@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { DEFAULT_REMINDERS, type ReminderPrefs } from '@/core/notifications/schedule';
 import type { PaletteId } from '@/theme/tokens';
 
 import { persistStorage, STORE_KEYS } from './storage';
@@ -19,6 +20,10 @@ export interface SettingsState {
   /** Umbral de dominio configurable (0.5–0.95). */
   masteryThreshold: number;
   weeklyGoalDays: number;
+  /** Recordatorios locales de estudio y bienestar (desactivados por defecto). */
+  reminders: ReminderPrefs;
+  /** Sincronizar el progreso con la nube (requiere sesión iniciada). */
+  cloudSync: boolean;
   set: (patch: Partial<Omit<SettingsState, 'set' | 'reset'>>) => void;
   reset: () => void;
 }
@@ -32,6 +37,8 @@ export const DEFAULT_SETTINGS = {
   explanationStyle: 'sencilla' as ExplanationStyle,
   masteryThreshold: 0.8,
   weeklyGoalDays: 4,
+  reminders: DEFAULT_REMINDERS,
+  cloudSync: false,
 };
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -49,6 +56,15 @@ export const useSettings = create<SettingsState>()(
         })),
       reset: () => set(DEFAULT_SETTINGS),
     }),
-    { name: STORE_KEYS.settings, storage: persistStorage, version: 1 },
+    {
+      name: STORE_KEYS.settings,
+      storage: persistStorage,
+      version: 2,
+      // v1 → v2: añade recordatorios y sincronización (desactivados).
+      migrate: (persisted, version) => {
+        const old = (persisted ?? {}) as Partial<SettingsState>;
+        return (version < 2 ? { ...DEFAULT_SETTINGS, ...old } : old) as SettingsState;
+      },
+    },
   ),
 );

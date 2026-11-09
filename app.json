@@ -19,7 +19,10 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.katalizia.app"
+      "package": "com.katalizia.app",
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "output": "single",
@@ -34,12 +37,26 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#22D3EE"
+        }
+      ],
+      "expo-updates"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#070B1F"
+    "backgroundColor": "#070B1F",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

@@ -17,6 +17,7 @@ export const XP_REWARDS = {
   missionCompleted: 30,
   elementDiscovered: 5,
   minigamePlayed: 15,
+  labExperiment: 10,
 } as const;
 
 export type XpEvent = keyof typeof XP_REWARDS;

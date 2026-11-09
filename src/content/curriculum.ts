@@ -151,3 +151,14 @@ export function findUnit(unitId: string) {
       for (const u of m.units) if (u.id === unitId) return { world: w, module: m, unit: u };
   return null;
 }
+
+/** Nombre legible de un concepto (o su id si no existe). */
+export function conceptName(conceptId: string): string {
+  for (const w of WORLDS)
+    for (const m of w.modules)
+      for (const u of m.units) {
+        const c = u.concepts.find((x) => x.id === conceptId);
+        if (c) return c.name;
+      }
+  return conceptId;
+}

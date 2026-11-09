@@ -5,6 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
 
 import { SplashIntro } from '@/components/SplashIntro';
+import { UpdateBanner } from '@/components/UpdateBanner';
+import { startAutoSync } from '@/services/cloud/sync';
 import { useHydrated } from '@/state/useHydrated';
 import { useTheme } from '@/theme/useTheme';
 
@@ -19,7 +21,10 @@ export default function RootLayout() {
   const ready = (fontsLoaded || !!fontError) && hydrated;
 
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync().catch(() => {});
+    if (!ready) return;
+    SplashScreen.hideAsync().catch(() => {});
+    // Sin credenciales de Supabase no hace nada (modo solo local).
+    startAutoSync();
   }, [ready]);
 
   if (!ready) return null;
@@ -43,7 +48,15 @@ export default function RootLayout() {
         <Stack.Screen name="leccion/[id]" options={{ title: 'Lección' }} />
         <Stack.Screen name="diagnostico" options={{ title: 'Diagnóstico' }} />
         <Stack.Screen name="repaso" options={{ title: 'Repaso' }} />
+        <Stack.Screen name="estadisticas" options={{ title: 'Mi progreso' }} />
+        <Stack.Screen name="misiones" options={{ title: 'Misiones e insignias' }} />
+        <Stack.Screen name="laboratorio" options={{ title: 'Laboratorio virtual' }} />
+        <Stack.Screen name="juegos/rush" options={{ title: 'Periodic Rush' }} />
+        <Stack.Screen name="juegos/molecula" options={{ title: 'Molecular Lab' }} />
+        <Stack.Screen name="juegos/balanceo" options={{ title: 'Balance Express' }} />
+        <Stack.Screen name="cuenta" options={{ title: 'Sincronización' }} />
       </Stack>
+      <UpdateBanner />
       {!introDone && <SplashIntro onDone={finishIntro} />}
     </>
   );

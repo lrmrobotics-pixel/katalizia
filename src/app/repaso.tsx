@@ -10,12 +10,14 @@ import { buildReviewSession } from '@/core/learning/review';
 import type { Question } from '@/core/learning/types';
 import { useLearning } from '@/state/learning';
 import { useRewards } from '@/state/rewards';
+import { useStudyTimer } from '@/state/useStudyTimer';
 
 const UNITS = WORLDS.flatMap((w) => w.modules.flatMap((m) => m.units));
 
 export default function Repaso() {
   const recordAttempt = useLearning((s) => s.recordAttempt);
   const award = useRewards((s) => s.award);
+  useStudyTimer();
   // La sesión se fija al abrir la pantalla para que no cambie mientras respondes.
   const [session] = useState<Question[]>(() => {
     const { cards, attempts } = useLearning.getState();

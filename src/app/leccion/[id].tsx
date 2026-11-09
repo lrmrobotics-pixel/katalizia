@@ -7,12 +7,13 @@ import { QuestionView, type QuestionOutcome } from '@/components/lesson/Question
 import { LessonVisual } from '@/components/lesson/Visuals';
 import { PixelCat } from '@/components/pet/PixelCat';
 import { Button, Card, Chip, KText, ProgressBar, StateView } from '@/components/ui';
-import { findUnit } from '@/content/curriculum';
+import { conceptName, findUnit } from '@/content/curriculum';
 import { scoreOf } from '@/core/learning/grading';
 import { isUnitUnlocked } from '@/core/learning/unlock';
 import type { LessonStep, Question } from '@/core/learning/types';
 import { useLearning } from '@/state/learning';
 import { useRewards } from '@/state/rewards';
+import { useStudyTimer } from '@/state/useStudyTimer';
 import { useSettings } from '@/state/settings';
 import { spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -35,6 +36,7 @@ export default function Leccion() {
   const completeUnit = useLearning((s) => s.completeUnit);
   const setLastUnit = useLearning((s) => s.setLastUnit);
   const award = useRewards((s) => s.award);
+  useStudyTimer();
 
   const [stepIdx, setStepIdx] = useState(0);
   const [qIdx, setQIdx] = useState(0);
@@ -61,7 +63,7 @@ export default function Leccion() {
           .flatMap((c) => c.prerequisites)
           .filter((p) => !unit.concepts.some((c) => c.id === p))
           .map((p) => (
-            <Chip key={p} label={`${p} · ${STATUS_LABEL[lookup(p).status]}`} />
+            <Chip key={p} label={`${conceptName(p)} · ${STATUS_LABEL[lookup(p).status]}`} />
           ))}
         <Button label="Volver" onPress={() => router.back()} />
       </SafeAreaView>
