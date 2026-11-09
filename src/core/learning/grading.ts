@@ -21,10 +21,11 @@ export interface GradeResult {
 
 /** Acepta coma o punto decimal y notación "2.5e-3" / "2,5 × 10^-3". */
 export function parseNumber(raw: string): number | null {
-  let s = raw.trim().replace(/\s+/g, '').replace(',', '.');
+  // Acepta el signo menos tipográfico (−) además del guion.
+  let s = raw.trim().replace(/\s+/g, '').replace(',', '.').replace(/^−/, '-');
   const sci = /^([-+]?\d*\.?\d+)(?:[x×*]10\^?([-+−]?\d+))$/i.exec(s);
   if (sci) return Number(sci[1]) * 10 ** Number(sci[2].replace('−', '-'));
-  s = s.replace(/[a-zA-Zµ/]+$/, ''); // quita unidad escrita al final
+  s = s.replace(/[a-zA-Zµ/%°²³]+$/, ''); // quita unidad escrita al final
   if (!/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s)) return null;
   return Number(s);
 }

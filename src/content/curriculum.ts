@@ -1,6 +1,6 @@
 /**
  * Mapa curricular de KATALIZIA: 12 mundos en cadena de prerrequisitos.
- * Los módulos/unidades con contenido se añaden en la Fase 3 (`modules` vacío = sin contenido aún).
+ * Cada mundo tiene un módulo con contenido; los temas de `topics` sin unidad aún son el temario pendiente de ampliar.
  *
  * Referencia general del alcance: OpenStax Chemistry 2e y Biology 2e
  * (https://openstax.org), Lehninger Principles of Biochemistry (8.ª ed.) para el Mundo 10.
@@ -8,6 +8,17 @@
 import type { World } from '@/core/learning/types';
 
 import { WORLD1_MODULES } from './world1';
+import { WORLD2_MODULES } from './world2';
+import { WORLD3_MODULES } from './world3';
+import { WORLD4_MODULES } from './world4';
+import { WORLD5_MODULES } from './world5';
+import { WORLD6_MODULES } from './world6';
+import { WORLD7_MODULES } from './world7';
+import { WORLD8_MODULES } from './world8';
+import { WORLD9_MODULES } from './world9';
+import { WORLD10_MODULES } from './world10';
+import { WORLD11_MODULES } from './world11';
+import { WORLD12_MODULES } from './world12';
 
 interface WorldOutline extends World {
   topics: string[];
@@ -85,6 +96,50 @@ const CONTENT: Record<string, Pick<World, 'modules' | 'objectives'>> = {
       'Clasificar sustancias y elegir métodos de separación.',
       'Medir y convertir unidades con seguridad; calcular densidad.',
     ],
+  },
+  'm2-atomo': {
+    modules: WORLD2_MODULES,
+    objectives: ['Calcular partículas subatómicas, isótopos e iones.', 'Escribir configuraciones electrónicas.'],
+  },
+  'm3-tabla': {
+    modules: WORLD3_MODULES,
+    objectives: ['Leer grupos y períodos; deducir electrones de valencia.', 'Predecir radio, electronegatividad e ionización.'],
+  },
+  'm4-enlaces': {
+    modules: WORLD4_MODULES,
+    objectives: ['Distinguir tipos de enlace y dibujar estructuras de Lewis.', 'Predecir geometría, polaridad y fuerzas intermoleculares.'],
+  },
+  'm5-reacciones': {
+    modules: WORLD5_MODULES,
+    objectives: ['Balancear ecuaciones y aplicar la conservación de la masa.', 'Clasificar reacciones e identificar oxidación y reducción.'],
+  },
+  'm6-calculos': {
+    modules: WORLD6_MODULES,
+    objectives: ['Convertir gramos, moles y partículas.', 'Resolver estequiometría, molaridad y diluciones.'],
+  },
+  'm7-acidos': {
+    modules: WORLD7_MODULES,
+    objectives: ['Reconocer ácidos, bases y pares conjugados.', 'Calcular pH y explicar los amortiguadores.'],
+  },
+  'm8-energia': {
+    modules: WORLD8_MODULES,
+    objectives: ['Interpretar ΔH, ΔS y ΔG.', 'Explicar velocidad, catalizadores y Le Châtelier.'],
+  },
+  'm9-organica': {
+    modules: WORLD9_MODULES,
+    objectives: ['Nombrar hidrocarburos sencillos.', 'Reconocer grupos funcionales e isómeros.'],
+  },
+  'm10-bioquimica': {
+    modules: WORLD10_MODULES,
+    objectives: ['Clasificar biomoléculas y explicar las enzimas.', 'Describir ADN, ARN, ATP y la respiración celular.'],
+  },
+  'm11-medicina': {
+    modules: WORLD11_MODULES,
+    objectives: ['Explicar ósmosis, tonicidad y electrolitos.', 'Relacionar el bicarbonato con el pH sanguíneo y aplicar la vida media.'],
+  },
+  'm12-preu': {
+    modules: WORLD12_MODULES,
+    objectives: ['Analizar datos experimentales.', 'Resolver problemas integradores y casos contextualizados.'],
   },
 };
 
