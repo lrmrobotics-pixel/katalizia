@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import * as Updates from 'expo-updates';
 import { useState } from 'react';
-import { Alert, Pressable, Switch, TextInput, View } from 'react-native';
+import { Alert, Platform, Pressable, Switch, TextInput, View } from 'react-native';
 
 import { Button, Card, KText, Screen } from '@/components/ui';
 import { Stepper } from '@/components/ui/Stepper';
@@ -217,6 +217,9 @@ function RemindersCard() {
   );
 }
 
+/** expo-updates solo funciona en el APK instalado (no en web, Expo Go ni desarrollo). */
+const updatesActive = Platform.OS !== 'web' && Updates.isEnabled;
+
 function UpdatesCard() {
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -240,7 +243,7 @@ function UpdatesCard() {
       <KText variant="bodyLg" style={{ fontWeight: '700' }}>
         Versión
       </KText>
-      {Updates.isEnabled ? (
+      {updatesActive ? (
         <>
           <KText muted variant="caption">
             Canal {Updates.channel ?? '—'} · versión {Updates.runtimeVersion ?? '—'} ·{' '}

@@ -29,5 +29,10 @@ npm run icons      # regenerar iconos desde el sprite del gato
 
 Ver [docs/ROADMAP.md](docs/ROADMAP.md). Reglas y arquitectura: [CLAUDE.md](CLAUDE.md).
 
-Kata funciona en **modo local (sin IA)** hasta que se configure un backend con un proveedor de IA.
-Todos los datos se guardan solo en el dispositivo.
+Kata funciona en **modo local (sin IA)**: 30 temas escritos a mano con fuentes.
+Los datos se guardan en el dispositivo; la sincronización en la nube es opcional (ver [docs/SUPABASE.md](docs/SUPABASE.md)).
+
+## APK para compartir y actualizaciones automáticas
+
+Ver [docs/RELEASE.md](docs/RELEASE.md): APK por EAS Build (enlace para WhatsApp) y EAS Update
+(la app se actualiza sola al cerrarla y volver a abrirla).

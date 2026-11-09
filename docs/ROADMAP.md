@@ -2,72 +2,78 @@
 
 Leyenda: ✅ hecho y verificado · 🟡 parcial · ⬜ pendiente
 
-Verificación: `npm test` (Jest, 7 suites), `npm run typecheck`, `npx eslint src`, y recorrido manual en la
-versión web (`npm run web`) con viewport móvil. No se ha probado aún en un Android físico (requiere Expo Go).
+Verificación: `npm test` (Jest, 12 suites, 182 pruebas), `npm run typecheck`, `npx eslint src`, y recorrido manual en
+la versión web (`npm run web`) con viewport móvil. **No se ha probado aún en un Android físico** (Expo Go o APK).
 
 ## Fase 1 — Fundación ✅
 
 - ✅ Expo SDK 58 + TypeScript estricto + Expo Router (pestañas + stack)
 - ✅ Sistema de diseño: tokens, 3 paletas, oscuro/claro/sistema, alto contraste, tamaño de texto, movimiento reducido
-- ✅ Componentes: `Screen`, `Card`, `Button`, `ProgressBar`, `Chip`, `ComingSoon`, `StateView`, `PixelIcon`
-- ✅ Gato pixel art original (20×26), 8 expresiones, parpadeo, animación idle, 5 accesorios
-- ✅ Iconos de app generados desde el sprite (`npm run icons`), splash animado
-- ✅ Modelo de datos: mundo → módulo → unidad → pasos/preguntas, con fuentes por unidad
-- ✅ Núcleo químico probado: masa molar (paréntesis, hidratos), balanceo algebraico exacto, gramos↔moles,
-  molaridad, dilución, reactivo limitante, rendimiento, pH (fuerte, débil, amortiguador), unidades SI,
-  notación científica, cifras significativas, configuración electrónica de los 118 elementos
-- ✅ Persistencia local (Zustand + AsyncStorage) con rehidratación probada
+- ✅ Gato pixel art original, 8 expresiones, 5 accesorios; iconos generados desde el sprite
+- ✅ Núcleo químico probado (masa molar, balanceo, estequiometría, pH, unidades, configuración electrónica)
+- ✅ Persistencia local con migraciones (`settings` v2, `rewards` v2)
+- ✅ Git: commits por bloque en la rama `main` (repositorio local; remoto privado pendiente de `gh auth login`)
 
-## Fase 2 — Experiencia principal 🟡
-- ✅ Onboarding (nombre, objetivos, ritmo semanal)
-- ✅ Dashboard: saludo de Kata, nivel/XP/monedas, ritmo semanal sin culpa, diagnóstico, repaso del día, continuar
-- ✅ Ajustes: perfil, apariencia, estilo de explicación, meta semanal, umbral de dominio, borrar datos
-- 🟡 Progreso: resumen en "Yo"; falta pantalla de estadísticas (tiempo de estudio, historial, evolución)
+## Fase 2 — Experiencia principal ✅
+
+- ✅ Onboarding, dashboard (nivel, ritmo semanal, misiones de hoy, repaso, continuar), ajustes
+- ✅ Pantalla "Mi progreso": precisión, tiempo de estudio, actividad de 14 días, dominio por mundo, tipos de evidencia
 - ⬜ Pruebas de navegación con `expo-router/testing-library`
 
-## Fase 3 — Academia 🟡
-- ✅ Motor de lección con los 10 pasos pedagógicos, metáforas marcadas con sus límites, visuales SVG con límites del modelo
-- ✅ 5 tipos de pregunta: opción única, múltiple, numérica (coma/punto/notación científica), ordenar, emparejar
-- ✅ Pistas progresivas; cada distractor explica su error conceptual; detecta errores de potencia de 10
-- ✅ Repaso de errores al final de cada unidad; evaluación con umbral sin pistas; repetir unidad si no se alcanza
-- ✅ Dominio BKT + evidencia variada + retención espaciada; desbloqueo por prerrequisitos (unidades y mundos)
-- ✅ Repetición espaciada SM-2 y pantalla de repaso adaptativo (prioriza preguntas falladas)
-- ✅ Diagnóstico inicial (10 preguntas, 3 áreas) → recomendaciones; nunca desbloquea contenido
-- ✅ Mundo 1: 3 unidades (materia y cambios · sustancias y mezclas · medición y densidad), 26 preguntas, fuentes OpenStax/BIPM/IUPAC
-- ⬜ Mundo 1: falta unidad de notación científica avanzada/cifras significativas como unidad propia
-- ⬜ Mundos 2–12: contenido (estructura y temario ya definidos en `content/curriculum.ts`)
+## Fase 3 — Academia ✅
 
-## Fase 4 — Tutor 🟡
-- ✅ Capa `services/ai` con interfaz `TutorProvider` (sin acoplar a proveedor)
-- ✅ `LocalTutor` (NO es IA, la UI lo indica): 7 temas, estilos sencillo/formal/chisme, cambio de estrategia,
-  masa molar paso a paso, balanceo con pista antes de la solución
-- ✅ Chat con historial persistido, sugerencias, borrar conversación
-- ⬜ Backend proxy + proveedor de IA real — **requiere decisión y credenciales**
+- ✅ Motor de lección de 10 pasos, 5 tipos de pregunta, pistas, errores conceptuales, repaso de errores
+- ✅ Dominio BKT + evidencia variada + retención; desbloqueo por prerrequisitos; SM-2; diagnóstico
+- ✅ **Los 12 mundos con contenido**: 25 unidades, 158 preguntas, fuentes por unidad (OpenStax, IUPAC/CIAAW, BIPM, Lehninger)
+- ✅ Pruebas que recalculan las respuestas numéricas con el núcleo químico (`core/__tests__/worlds.test.ts`)
+- 🟡 Cada mundo tiene 1 módulo (2 unidades); los temas restantes de `topics` quedan para ampliar
 
-## Fase 5 — Mascota y gamificación 🟡
-- ✅ Alimentar, jugar, curiosidades, vestuario con compra/equipar; bienestar con piso, sin castigos
-- ✅ XP, niveles, monedas, continuidad semanal flexible
-- ⬜ Misiones diarias/semanales, insignias con criterios, laboratorio decorable
-- ⬜ Notificaciones locales (expo-notifications) y recordatorios de bienestar
+## Fase 4 — Tutor ✅ (modo local)
 
-## Fase 6 — Juegos y laboratorio 🟡
-- ✅ Tabla periódica: 118 elementos, búsqueda, filtros por familia, favoritos, detalle, configuración electrónica
-- ⬜ Tabla: electronegatividad, radios, ionización (con fuente), usos, importancia biológica, tendencias visuales
-- ⬜ Minijuegos (mínimo dos para la v1: Molecular Lab y Periodic Rush)
-- ⬜ Simulaciones: pH, disoluciones, balanceo interactivo, átomo de Bohr
+- ✅ `LocalTutor` sin IA (la UI lo indica): 30 temas de los 12 mundos, estilos sencillo/formal/chisme
+- ⏸ Proveedor de IA real: **decisión de la propietaria: no por ahora** (la interfaz `TutorProvider` queda lista)
 
-## Fase 7 — Lanzamiento ⬜
-- `eas.json` con perfil `preview` (APK) y build en la nube; auditoría de accesibilidad y rendimiento
+## Fase 5 — Mascota y gamificación ✅
 
-## Decisiones abiertas (requieren al propietario)
-1. Proveedor de IA para Kata y dónde alojar el backend (coste mensual).
-2. ¿Sincronización en la nube (Supabase) o solo local?
-3. Cuenta Expo para compilar el APK con EAS Build.
-4. Identificador Android definitivo (`com.katalizia.app` es provisional).
-5. ¿Inicializar repositorio git y hacer commits por fase?
+- ✅ Mascota, vestuario, XP, monedas, continuidad semanal sin culpa
+- ✅ Misiones diarias (3 rotativas) y semanales; 14 insignias con criterios explícitos (derivadas, sin estado oculto)
+- ✅ Recordatorios locales de estudio y de bienestar (agua, pausas, estiramientos, vista, postura), desactivados por defecto
+- 🟡 Recordatorios: lógica probada; falta probarlos en un teléfono real (en web no existen y la UI lo dice)
+
+## Fase 6 — Juegos y laboratorio ✅
+
+- ✅ Tabla periódica de 118 elementos
+- ✅ Minijuegos: **Periodic Rush**, **Molecular Lab**, **Balance Express** (récords y XP; fallar nunca resta)
+- ✅ Laboratorio virtual: simulador de pH (fuerte/débil), diluciones C₁V₁ = C₂V₂, calculadora de masa molar
+- ⬜ Tabla: electronegatividad, radios e ionización por elemento (con fuente)
+- ⬜ Más simulaciones: átomo de Bohr, valoraciones
+
+## Fase 7 — Lanzamiento 🟡
+
+- ✅ `eas.json` (perfil `preview` → APK) y `expo-updates` (descarga al abrir, aplica al reabrir; aviso "Actualizar ahora")
+- ✅ Sincronización Supabase lista en código (login por código al correo, RLS, fusión sin pérdidas); **inactiva hasta configurar**
+- ⬜ Cuenta Expo + `eas init` + primer APK (ver `docs/RELEASE.md`)
+- ⬜ Proyecto Supabase + `.env` (ver `docs/SUPABASE.md`)
+- ⬜ Auditoría de accesibilidad y rendimiento en dispositivo real
+
+## Decisiones tomadas
+
+1. Tutor: modo local por ahora (sin IA de pago).
+2. Sincronización en la nube: sí, con Supabase.
+3. APK compartible + actualizaciones automáticas: sí, con EAS Build + EAS Update.
+4. Git con repositorio privado.
+
+## Pendiente de la propietaria
+
+1. Cuenta de Expo y `npx eas-cli login` (para el APK y las actualizaciones).
+2. Proyecto de Supabase y sus dos claves públicas (para la sincronización).
+3. `gh auth login` (para crear el repositorio privado en GitHub y subir el código).
+4. Identificador Android definitivo (`com.katalizia.app` es provisional; cambiarlo después del primer APK obliga a reinstalar).
 
 ## Limitaciones conocidas
+
 - Balanceo: sin cargas iónicas ni semirreacciones redox.
 - pH: actividad ≈ concentración, 25 °C, especies monopróticas.
 - Superpesados (Z ≥ 104): datos predichos, marcados en la UI.
-- Un concepto necesita ≥ 3 respuestas; los de pocas preguntas se completan vía repaso espaciado.
+- Sincronización: XP estudiada sin conexión en dos dispositivos a la vez puede contarse una sola vez.
+- Tiempo de estudio: se mide con la pantalla abierta y en primer plano, máx. 60 min por sesión.

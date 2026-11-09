@@ -1,10 +1,10 @@
 /**
  * Actualizaciones por aire (EAS Update). La app descarga las novedades al abrirse
  * y las aplica al volver a abrirla; este aviso permite aplicarlas al momento.
- * En Expo Go y en web `Updates.isEnabled` es false y no se muestra nada.
+ * En web y en Expo Go no se muestra nada (solo funciona en el APK instalado).
  */
 import * as Updates from 'expo-updates';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, KText } from '@/components/ui';
@@ -15,7 +15,7 @@ export function UpdateBanner() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { isUpdatePending } = Updates.useUpdates();
-  if (!Updates.isEnabled || !isUpdatePending) return null;
+  if (Platform.OS === 'web' || !Updates.isEnabled || !isUpdatePending) return null;
   return (
     <View
       accessibilityRole="alert"
