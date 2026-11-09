@@ -4,7 +4,7 @@
  */
 import type { Module } from '@/core/learning/types';
 
-import { mc, num, sc, unit } from './build';
+import { num, sc, unit } from './build';
 import { CIAAW, OPENSTAX_CHEM } from './sources';
 
 const mol = unit({

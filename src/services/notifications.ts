@@ -3,6 +3,7 @@
  * En web no hay soporte: la UI lo indica en vez de fingir que funcionan.
  */
 import * as Notifications from 'expo-notifications';
+import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { buildReminderPlan, type PlannedReminder, type ReminderPrefs } from '@/core/notifications/schedule';
@@ -58,11 +59,11 @@ export async function applyReminders(prefs: ReminderPrefs): Promise<{ scheduled:
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('estudio', {
       name: 'Recordatorios de estudio',
-      importance: Notifications.AndroidImportance.DEFAULT,
+      importance: AndroidImportance.DEFAULT,
     });
     await Notifications.setNotificationChannelAsync('bienestar', {
       name: 'Bienestar (agua, pausas, estiramientos)',
-      importance: Notifications.AndroidImportance.LOW,
+      importance: AndroidImportance.LOW,
     });
   }
   for (const r of plan) {

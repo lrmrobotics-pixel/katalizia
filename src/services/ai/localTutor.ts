@@ -100,7 +100,8 @@ export class LocalTutor implements TutorProvider {
         messages: [
           say(
             'Todavía no tengo ese tema en mi modo local (sin IA). Puedo ayudarte con: ' +
-              KNOWLEDGE.map((k) => k.title.toLowerCase()).join(', ') +
+              KNOWLEDGE.slice(0, 8).map((k) => k.title.toLowerCase()).join(', ') +
+              ` y ${KNOWLEDGE.length - 8} temas más (isótopos, enlaces, redox, pH, enzimas, ADN, ósmosis…)` +
               ', y calcular masas molares o balancear ecuaciones.',
           ),
         ],

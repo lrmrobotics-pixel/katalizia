@@ -3,6 +3,7 @@
  * Fuente de definiciones: OpenStax Chemistry 2e (https://openstax.org/details/books/chemistry-2e),
  * secciones indicadas en `source`. Las analogías llevan sus límites explícitos.
  */
+import { KNOWLEDGE_2 } from './knowledge2';
 
 export interface KnowledgeEntry {
   id: string;
@@ -18,7 +19,7 @@ export interface KnowledgeEntry {
   source: string;
 }
 
-export const KNOWLEDGE: KnowledgeEntry[] = [
+const KNOWLEDGE_BASE: KnowledgeEntry[] = [
   {
     id: 'mol',
     keywords: ['mol', 'moles', 'avogadro', 'cantidad de sustancia'],
@@ -139,6 +140,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     source: 'OpenStax Chemistry 2e §7.1, §7.6',
   },
 ];
+
+/** Todos los temas del modo local (Mundos 1–12). */
+export const KNOWLEDGE: KnowledgeEntry[] = [...KNOWLEDGE_BASE, ...KNOWLEDGE_2];
 
 const strip = (s: string) =>
   s

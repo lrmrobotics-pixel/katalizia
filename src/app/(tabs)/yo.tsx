@@ -130,6 +130,8 @@ export default function Yo() {
         </KText>
       </Card>
 
+      <Button label="Mi progreso y estadísticas" variant="secondary" onPress={() => router.push('/estadisticas')} />
+      <Button label="Misiones e insignias" variant="secondary" onPress={() => router.push('/misiones')} />
       <Button label="Ajustes" variant="ghost" onPress={() => router.push('/ajustes')} />
     </Screen>
   );

@@ -8,6 +8,7 @@ import {
   WEEKLY,
   type ActivityEvent,
 } from '../gamification/missions';
+import { computeStats } from '../learning/stats';
 
 const DAY = 24 * 3600 * 1000;
 // Miércoles 11 de noviembre de 2026, 10:00 hora local.
@@ -74,5 +75,23 @@ describe('insignias', () => {
   });
   it('ids únicos', () => {
     expect(new Set(BADGES.map((b) => b.id)).size).toBe(BADGES.length);
+  });
+});
+
+describe('estadísticas', () => {
+  const a = (at: number, correct: boolean, hintsUsed = 0) => ({ questionId: 'q', conceptId: 'c', kind: 'concept' as const, correct, hintsUsed, at });
+  it('calcula precisión, días y minutos', () => {
+    const today = new Date(2026, 10, 11, 10).getTime();
+    const s = computeStats([a(today, true), a(today, false), a(today - DAY, true, 1)], { '2026-11-11': 30 * 60000 }, today, 7);
+    expect(s.totalAttempts).toBe(3);
+    expect(s.accuracy).toBeCloseTo(2 / 3);
+    expect(s.accuracyNoHints).toBeCloseTo(1 / 3);
+    expect(s.daily).toHaveLength(7);
+    expect(s.daily[6]).toEqual({ day: '2026-11-11', attempts: 2, correct: 1, minutes: 30 });
+    expect(s.daily[5].attempts).toBe(1);
+    expect(s.totalMinutes).toBe(30);
+  });
+  it('sin datos no inventa porcentajes', () => {
+    expect(computeStats([], {}, Date.now()).accuracy).toBeNull();
   });
 });

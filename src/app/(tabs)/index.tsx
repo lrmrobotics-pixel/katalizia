@@ -13,6 +13,7 @@ import { usePet } from '@/state/pet';
 import { useProfile } from '@/state/profile';
 import { useRewards } from '@/state/rewards';
 import { useSettings } from '@/state/settings';
+import { useMissions } from '@/state/useGamification';
 import { spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
@@ -38,6 +39,7 @@ export default function Home() {
   const lvl = levelFromXp(xp);
   const due = dueConcepts(cards, now).length;
   const consistency = computeConsistency(activeDays, weeklyGoal, now);
+  const missions = useMissions(now);
 
   return (
     <Screen>
@@ -115,6 +117,23 @@ export default function Home() {
           <Button label="Ver la Academia" variant="ghost" onPress={() => router.push('/academia')} />
         </Card>
       )}
+
+      <Card>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <KText variant="bodyLg" style={{ fontWeight: '700' }}>
+            Misiones de hoy
+          </KText>
+          <KText muted variant="caption">
+            {missions.daily.filter((m) => m.done).length}/{missions.daily.length}
+          </KText>
+        </View>
+        {missions.daily.map((m) => (
+          <KText key={m.key} muted={m.done}>
+            {m.done ? '✔' : '○'} {m.def.title} ({m.progress}/{m.target})
+          </KText>
+        ))}
+        <Button label="Ver misiones e insignias" variant="ghost" onPress={() => router.push('/misiones')} />
+      </Card>
 
       <View style={{ flexDirection: 'row', gap: spacing.md }}>
         <View style={{ flex: 1 }}>

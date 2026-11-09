@@ -58,3 +58,16 @@ describe('tutor local', () => {
     expect(all(r)).toMatch(/modo local \(sin IA\)/);
   });
 });
+
+describe('temas ampliados (Mundos 2–12)', () => {
+  it.each([
+    ['¿qué es un isótopo?', 'isotopos'],
+    ['explícame la ósmosis', 'osmosis'],
+    ['no entiendo la oxidación', 'redox'],
+    ['¿cómo funciona un amortiguador?', 'amortiguador'],
+    ['qué hace el ATP', 'atp'],
+    ['háblame de Le Chatelier', 'equilibrio'],
+  ])('%s → %s', (q, id) => {
+    expect(findEntry(q)?.id).toBe(id);
+  });
+});
