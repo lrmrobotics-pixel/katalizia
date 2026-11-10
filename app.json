@@ -21,6 +21,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.katalizia.app",
       "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
@@ -56,7 +57,19 @@
     },
     "updates": {
       "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
-    }
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/154e025b-b335-4834-a17d-92451e6a4cf9"
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "154e025b-b335-4834-a17d-92451e6a4cf9"
+      }
+    },
+    "owner": "lrm_robotics"
   }
 }
