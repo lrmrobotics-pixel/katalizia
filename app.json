@@ -21,7 +21,6 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.katalizia.app",
       "permissions": [
-        "android.permission.POST_NOTIFICATIONS",
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
