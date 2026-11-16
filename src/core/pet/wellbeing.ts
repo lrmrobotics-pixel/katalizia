@@ -35,7 +35,21 @@ export const play = (s: PetStats, now: number): PetStats => {
   return { ...d, joy: Math.min(100, d.joy + 25) };
 };
 
-export type CatMood = 'feliz' | 'pensativo' | 'sorprendido' | 'confundido' | 'celebrando' | 'explicando' | 'durmiendo' | 'experimentando';
+export type CatMood =
+  | 'feliz'
+  | 'curioso'
+  | 'pensativo'
+  | 'sorprendido'
+  | 'confundido'
+  | 'celebrando'
+  | 'explicando'
+  | 'concentrado'
+  | 'durmiendo'
+  | 'experimentando';
+
+export const CAT_MOODS: CatMood[] = [
+  'feliz', 'curioso', 'pensativo', 'sorprendido', 'confundido', 'celebrando', 'explicando', 'concentrado', 'durmiendo', 'experimentando',
+];
 
 /** Estado de ánimo por defecto según bienestar; siempre positivo o neutro. */
 export function idleMood(s: PetStats, hour: number): CatMood {

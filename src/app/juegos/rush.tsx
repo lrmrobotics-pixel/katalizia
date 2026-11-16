@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, ProgressBar, Screen } from '@/components/ui';
 import { makeRushRound, RUSH_SECONDS, rushPoints, type RushLevel, type RushRound } from '@/core/games';
 import { useRewards } from '@/state/rewards';
@@ -86,7 +86,7 @@ export default function PeriodicRush() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="experimentando" size={110} />
+          <KataAvatar mood="experimentando" size={110} />
         </View>
         <KText variant="title">Periodic Rush</KText>
         <KText>
@@ -125,7 +125,7 @@ export default function PeriodicRush() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="celebrando" size={110} />
+          <KataAvatar mood="celebrando" size={110} />
         </View>
         <KText variant="title">{record ? '¡Nuevo récord!' : '¡Tiempo!'}</KText>
         <KText variant="bodyLg">

@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, ProgressBar, Screen } from '@/components/ui';
 import { Stepper } from '@/components/ui/Stepper';
 import type { Composition } from '@/core/chemistry/formula';
@@ -43,7 +43,7 @@ export default function MolecularLab() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="celebrando" size={110} />
+          <KataAvatar mood="celebrando" size={110} />
         </View>
         <KText variant="title">{record ? '¡Nuevo récord!' : '¡Laboratorio completado!'}</KText>
         <KText variant="bodyLg">{score} puntos</KText>

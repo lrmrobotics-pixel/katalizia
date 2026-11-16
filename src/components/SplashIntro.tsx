@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { KText } from '@/components/ui';
 import { spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -42,7 +42,7 @@ export function SplashIntro({ onDone }: { onDone: () => void }) {
       style={[StyleSheet.absoluteFill, styles.root, { backgroundColor: colors.bg }, rootStyle]}
       accessibilityLabel="KATALIZIA, química que te transforma">
       <Animated.View style={[styles.center, contentStyle]}>
-        <PixelCat mood="experimentando" size={140} accessoryIds={['bata-clasica']} />
+        <KataAvatar mood="experimentando" size={140} />
         <View style={{ height: spacing.lg }} />
         <KText variant="pixel" color={colors.accent} style={{ fontSize: 22, lineHeight: 34 }}>
           KATALIZIA

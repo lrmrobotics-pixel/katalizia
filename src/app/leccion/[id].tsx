@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { QuestionView, type QuestionOutcome } from '@/components/lesson/QuestionView';
 import { LessonVisual } from '@/components/lesson/Visuals';
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, Chip, KText, ProgressBar, StateView } from '@/components/ui';
 import { conceptName, findUnit } from '@/content/curriculum';
 import { scoreOf } from '@/core/learning/grading';
@@ -57,7 +57,7 @@ export default function Leccion() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg, padding: spacing.lg, gap: spacing.lg }}>
         <Stack.Screen options={{ title: unit.title }} />
-        <PixelCat mood="pensativo" size={100} />
+        <KataAvatar mood="pensativo" size={100} />
         <KText>Esta unidad necesita que antes domines:</KText>
         {unit.concepts
           .flatMap((c) => c.prerequisites)
@@ -113,7 +113,7 @@ export default function Leccion() {
         <Stack.Screen options={{ title: 'Resultado' }} />
         <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}>
           <View style={{ alignItems: 'center' }}>
-            <PixelCat mood={passed ? 'celebrando' : 'pensativo'} size={130} />
+            <KataAvatar mood={passed ? 'celebrando' : 'pensativo'} size={130} />
           </View>
           <KText variant="title">{passed ? '¡Unidad superada!' : 'Casi: repasemos un poco más'}</KText>
           <KText>

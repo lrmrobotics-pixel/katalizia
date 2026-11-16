@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, Screen } from '@/components/ui';
 import type { CatMood } from '@/core/pet/wellbeing';
 import { useProfile, type StudyGoal } from '@/state/profile';
@@ -58,7 +58,7 @@ export default function Onboarding() {
   return (
     <Screen>
       <View style={{ alignItems: 'center', paddingTop: spacing.xl }}>
-        <PixelCat mood={isSetup ? 'pensativo' : current.mood} size={150} accessoryIds={['bata-clasica']} />
+        <KataAvatar mood={isSetup ? 'pensativo' : current.mood} size={150} />
       </View>
 
       {!isSetup ? (

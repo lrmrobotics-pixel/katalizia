@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Chip, KText } from '@/components/ui';
 import type { CatMood } from '@/core/pet/wellbeing';
 import { getTutor } from '@/services/ai';
@@ -55,7 +55,7 @@ export default function Tutor() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, paddingBottom: spacing.sm }}>
-          <PixelCat mood={mood} size={56} accessoryIds={['bata-clasica']} />
+          <KataAvatar mood={mood} size={56} />
           <View style={{ flex: 1 }}>
             <KText variant="title">Kata</KText>
             <Chip label={tutor.isAI ? 'IA conectada' : 'Modo local · sin IA'} color={tutor.isAI ? colors.success : colors.warning} />
