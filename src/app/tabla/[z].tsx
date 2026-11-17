@@ -1,8 +1,11 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
+import { AtomView } from '@/components/lab/AtomBuilder';
 import { Button, Card, Chip, KText, Screen, StateView } from '@/components/ui';
+import { Stage } from '@/components/ui/scene';
+import { shellsFor } from '@/core/lab';
 import { fullConfiguration, shorthandConfiguration, valenceElectronsForGroup } from '@/core/chemistry/electronConfig';
 import { CATEGORY_LABELS, getElementByZ, PHASE_LABELS } from '@/data/elements';
 import { useRewards } from '@/state/rewards';
@@ -41,18 +44,30 @@ export default function ElementDetail() {
   const color = CATEGORY_COLORS[el.category];
   const valence = valenceElectronsForGroup(el.z, el.group);
   const fav = favorites.includes(el.z);
+  const neutrons = Math.max(0, Math.round(el.mass) - el.z);
 
   return (
     <Screen>
       <Stack.Screen options={{ title: el.name }} />
-      <Card accent={color} style={{ alignItems: 'center' }}>
-        <KText muted>{String(el.z)}</KText>
-        <KText variant="pixel" color={color} style={{ fontSize: 40, lineHeight: 56 }}>
-          {el.symbol}
+      <Stage tint={color} glow="center" particles={12}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <KText muted>{String(el.z)}</KText>
+            <KText variant="pixel" color={color} style={{ fontSize: 40, lineHeight: 56 }}>
+              {el.symbol}
+            </KText>
+            <KText variant="title" style={{ textAlign: 'center' }}>
+              {el.name}
+            </KText>
+            <Chip label={CATEGORY_LABELS[el.category]} color={color} />
+          </View>
+          <AtomView protons={el.z} neutrons={neutrons} shells={shellsFor(el.z)} size={170} />
+        </View>
+        <KText variant="caption" muted>
+          Capas: {shellsFor(el.z).join(' · ')}. Núcleo con {el.z} protones y ≈ {neutrons} neutrones (A ≈ masa atómica redondeada;
+          cada isótopo tiene su propio número de neutrones). Modelo de capas simplificado.
         </KText>
-        <KText variant="title">{el.name}</KText>
-        <Chip label={CATEGORY_LABELS[el.category]} color={color} />
-      </Card>
+      </Stage>
 
       <Card>
         <Row label="Número atómico (Z)" value={String(el.z)} />
@@ -90,9 +105,12 @@ export default function ElementDetail() {
         variant={fav ? 'ghost' : 'secondary'}
         onPress={() => toggleFavorite(el.z)}
       />
+      <Button label="Reto: Periodic Rush" variant="secondary" onPress={() => router.push('/juegos/rush')} />
+      {el.z <= 36 && (
+        <Button label="Constrúyelo en el laboratorio" variant="secondary" onPress={() => router.push('/laboratorio?modulo=atomos')} />
+      )}
       <KText muted variant="caption">
-        Fuentes: IUPAC/CIAAW (masas), NIST ASD (configuraciones), OpenStax Chemistry 2e. Usos cotidianos,
-        importancia biológica y tendencias periódicas: Fase 6.
+        Fuentes: IUPAC/CIAAW (masas), NIST ASD (configuraciones), OpenStax Chemistry 2e.
       </KText>
     </Screen>
   );

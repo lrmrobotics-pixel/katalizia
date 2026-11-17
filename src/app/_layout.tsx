@@ -54,6 +54,9 @@ export default function RootLayout() {
         <Stack.Screen name="juegos/rush" options={{ title: 'Periodic Rush' }} />
         <Stack.Screen name="juegos/molecula" options={{ title: 'Molecular Lab' }} />
         <Stack.Screen name="juegos/balanceo" options={{ title: 'Balance Express' }} />
+        <Stack.Screen name="juegos/ph" options={{ title: 'PH Master' }} />
+        <Stack.Screen name="juegos/cocina" options={{ title: 'Chemistry Kitchen' }} />
+        <Stack.Screen name="juegos/bioquest" options={{ title: 'BioQuest' }} />
         <Stack.Screen name="cuenta" options={{ title: 'Sincronización' }} />
       </Stack>
       <UpdateBanner />

@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { QuestionView } from '@/components/lesson/QuestionView';
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, ProgressBar, Screen } from '@/components/ui';
 import { AREA_LABELS, DIAGNOSTIC, summarizeDiagnostic, type DiagnosticArea, type DiagnosticResult } from '@/content/diagnostic';
 import { useProfile } from '@/state/profile';
@@ -20,7 +20,7 @@ export default function Diagnostico() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="pensativo" size={120} />
+          <KataAvatar mood="pensativo" size={120} />
         </View>
         <KText variant="title">Diagnóstico inicial</KText>
         <KText variant="bodyLg">
@@ -38,7 +38,7 @@ export default function Diagnostico() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="celebrando" size={120} />
+          <KataAvatar mood="celebrando" size={120} />
         </View>
         <KText variant="title">Tu punto de partida</KText>
         <Card>

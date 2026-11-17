@@ -36,6 +36,7 @@ const particulas = unit({
   visual: [
     'Notación de un núclido',
     'ᴬ_Z X  →  A = número másico (protones + neutrones), Z = número atómico (protones).\nEjemplo: ¹²₆C tiene 6 protones y 12 − 6 = 6 neutrones.',
+    'atom-explorer',
   ],
   formal: [
     'Definiciones',
@@ -152,6 +153,7 @@ const electrones = unit({
   visual: [
     'Orden de llenado (Aufbau)',
     '1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p…\nCapacidad: s = 2, p = 6, d = 10, f = 14 electrones. Un nivel n admite como máximo 2n² electrones.',
+    'shells-explorer',
   ],
   formal: [
     'Definiciones',

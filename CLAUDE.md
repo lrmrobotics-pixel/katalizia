@@ -37,12 +37,14 @@ src/
     games/        lógica de minijuegos (comprueba con el núcleo químico)
     notifications/ plan puro de recordatorios (estudio y bienestar)
     sync/         instantánea y fusión de progreso entre dispositivos
-    pet/          bienestar de la mascota (sin culpa)
+    pet/          bienestar sin culpa, poses compartidas de los 3 estilos de Kata, mensajes
+    render3d/     motor 3D low-poly propio (proyección, profundidad, luz) dibujado con SVG
+    lab/          lógica del laboratorio (átomos, valencias, indicadores, Arrhenius)
   content/        currículo (12 mundos) y, desde Fase 3, lecciones/preguntas con fuentes
   data/           datos científicos estructurados (118 elementos)
   state/          stores Zustand persistidos (settings, profile, learning, rewards, pet)
   theme/          tokens, paletas, useTheme (modo, contraste, tamaño de texto, movimiento reducido)
-  components/     ui/ primitivos · pet/ sprite y PixelCat
+  components/     ui/ primitivos y escenarios (scene.tsx, SciIcon) · pet/ KataAvatar (pixel, 2D, 3D) · lab/ módulos · games/ marco común · WorldArt
   services/ai/    interfaz TutorProvider + LocalTutor (sin IA, 30 temas); un proveedor real solo vía backend
   services/cloud/ cliente Supabase (solo clave anon) y sincronización automática
   services/notifications.ts  recordatorios locales con expo-notifications
@@ -64,7 +66,8 @@ src/
 8. Temas médicos: solo educativos; nunca diagnóstico ni indicaciones de tratamiento.
 9. Lógica nueva → en `core/` con pruebas. Cálculos químicos siempre con pruebas contra valores de libro.
 10. Dependencias nuevas: justificar en este archivo. Usar `npx expo install` para versiones compatibles.
-11. No copiar personajes comerciales. El gato es un sprite original (`components/pet/catSprite.ts`).
+11. No copiar personajes comerciales. Kata es original en sus 3 estilos (`components/pet/`). Usar siempre `KataAvatar`.
+12. Mientras no haya dependencias nativas nuevas, las mejoras llegan al APK por EAS Update. El 3D usa `core/render3d`, no expo-gl.
 
 ## Contenido académico
 

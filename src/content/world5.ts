@@ -36,6 +36,7 @@ const ecuaciones = unit({
   visual: [
     'Partes de una ecuación',
     '2 H₂(g) + O₂(g) → 2 H₂O(l)\nCoeficientes: 2, 1, 2 · Subíndices: el 2 de H₂ · Estados: (s) sólido, (l) líquido, (g) gas, (aq) disuelto en agua.',
+    'reaction-anim',
   ],
   formal: [
     'Definiciones',

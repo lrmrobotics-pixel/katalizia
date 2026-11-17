@@ -8,6 +8,8 @@ import { persistStorage, STORE_KEYS } from './storage';
 
 export type ThemePreference = 'system' | 'dark' | 'light';
 export type ExplanationStyle = 'sencilla' | 'formal' | 'chisme';
+/** Modos del tutor: Profesor (breve y ordenado), Experimento (enlaza al laboratorio), Chisme científico (analogías). */
+export type TutorMode = 'profesor' | 'experimento' | 'chisme';
 
 export interface SettingsState {
   theme: ThemePreference;
@@ -17,6 +19,7 @@ export interface SettingsState {
   /** Multiplicador de tamaño de texto (1 = normal). */
   textScale: number;
   explanationStyle: ExplanationStyle;
+  tutorMode: TutorMode;
   /** Umbral de dominio configurable (0.5–0.95). */
   masteryThreshold: number;
   weeklyGoalDays: number;
@@ -35,6 +38,7 @@ export const DEFAULT_SETTINGS = {
   reduceMotion: false,
   textScale: 1,
   explanationStyle: 'sencilla' as ExplanationStyle,
+  tutorMode: 'profesor' as TutorMode,
   masteryThreshold: 0.8,
   weeklyGoalDays: 4,
   reminders: DEFAULT_REMINDERS,
@@ -59,11 +63,11 @@ export const useSettings = create<SettingsState>()(
     {
       name: STORE_KEYS.settings,
       storage: persistStorage,
-      version: 2,
-      // v1 → v2: añade recordatorios y sincronización (desactivados).
+      version: 3,
+      // v1 → v2: añade recordatorios y sincronización (desactivados). v2 → v3: añade el modo del tutor.
       migrate: (persisted, version) => {
         const old = (persisted ?? {}) as Partial<SettingsState>;
-        return (version < 2 ? { ...DEFAULT_SETTINGS, ...old } : old) as SettingsState;
+        return (version < 3 ? { ...DEFAULT_SETTINGS, ...old } : old) as SettingsState;
       },
     },
   ),

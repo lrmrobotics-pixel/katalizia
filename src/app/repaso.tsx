@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { QuestionView } from '@/components/lesson/QuestionView';
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, ProgressBar, Screen } from '@/components/ui';
 import { WORLDS } from '@/content/curriculum';
 import { buildReviewSession } from '@/core/learning/review';
@@ -30,7 +30,7 @@ export default function Repaso() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="feliz" size={120} />
+          <KataAvatar mood="feliz" size={120} />
         </View>
         <KText variant="title">Nada pendiente por ahora</KText>
         <KText>
@@ -46,7 +46,7 @@ export default function Repaso() {
     return (
       <Screen>
         <View style={{ alignItems: 'center' }}>
-          <PixelCat mood="celebrando" size={120} />
+          <KataAvatar mood="celebrando" size={120} />
         </View>
         <KText variant="title">¡Repaso completado!</KText>
         <KText>

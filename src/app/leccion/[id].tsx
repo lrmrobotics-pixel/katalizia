@@ -5,12 +5,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { QuestionView, type QuestionOutcome } from '@/components/lesson/QuestionView';
 import { LessonVisual } from '@/components/lesson/Visuals';
-import { PixelCat } from '@/components/pet/PixelCat';
+import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, Chip, KText, ProgressBar, StateView } from '@/components/ui';
 import { conceptName, findUnit } from '@/content/curriculum';
 import { scoreOf } from '@/core/learning/grading';
 import { isUnitUnlocked } from '@/core/learning/unlock';
+import { PHASES, phaseIndex } from '@/core/learning/phases';
 import type { LessonStep, Question } from '@/core/learning/types';
+import type { CatMood } from '@/core/pet/wellbeing';
+import { alpha } from '@/components/ui/scene';
 import { useLearning } from '@/state/learning';
 import { useRewards } from '@/state/rewards';
 import { useStudyTimer } from '@/state/useStudyTimer';
@@ -43,6 +46,7 @@ export default function Leccion() {
   const [finished, setFinished] = useState(false);
   const [failed, setFailed] = useState<Question[]>([]);
   const [quizResults, setQuizResults] = useState<boolean[]>([]);
+  const [reaction, setReaction] = useState<{ mood: CatMood; text: string } | null>(null);
   const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
 
   const unit = found?.unit;
@@ -57,7 +61,7 @@ export default function Leccion() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg, padding: spacing.lg, gap: spacing.lg }}>
         <Stack.Screen options={{ title: unit.title }} />
-        <PixelCat mood="pensativo" size={100} />
+        <KataAvatar mood="pensativo" size={100} />
         <KText>Esta unidad necesita que antes domines:</KText>
         {unit.concepts
           .flatMap((c) => c.prerequisites)
@@ -79,6 +83,7 @@ export default function Leccion() {
 
   const next = (results: boolean[] = quizResults) => {
     setQIdx(0);
+    setReaction(null);
     if (stepIdx + 1 < unit.steps.length) {
       setStepIdx(stepIdx + 1);
       setLastUnit(unit.id);
@@ -100,6 +105,11 @@ export default function Leccion() {
     const results = step.kind === 'quiz' ? [...quizResults, o.correct && o.hintsUsed === 0] : quizResults;
     setQuizResults(results);
     if (!o.correct && !isReview && !failed.includes(q)) setFailed([...failed, q]);
+    setReaction(
+      o.correct
+        ? { mood: 'celebrando', text: o.hintsUsed ? '¡Bien! Con pistas también se aprende.' : '¡Correcto!' }
+        : { mood: 'pensativo', text: 'Casi. Lee la explicación y lo repasamos al final de la lección.' },
+    );
     if (qIdx + 1 < questions.length) setQIdx(qIdx + 1);
     else next(results);
     scroll.current?.scrollTo({ y: 0, animated: false });
@@ -113,7 +123,7 @@ export default function Leccion() {
         <Stack.Screen options={{ title: 'Resultado' }} />
         <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}>
           <View style={{ alignItems: 'center' }}>
-            <PixelCat mood={passed ? 'celebrando' : 'pensativo'} size={130} />
+            <KataAvatar mood={passed ? 'celebrando' : 'pensativo'} size={130} />
           </View>
           <KText variant="title">{passed ? '¡Unidad superada!' : 'Casi: repasemos un poco más'}</KText>
           <KText>
@@ -151,7 +161,28 @@ export default function Leccion() {
         <ProgressBar value={(stepIdx + (hasQuestions ? qIdx / questions.length : 0)) / unit.steps.length} label="Progreso de la lección" />
       </View>
       <ScrollView ref={scroll} contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xxl * 2 }}>
-        <Chip label={`Paso ${stepIdx + 1} de ${unit.steps.length}`} />
+        <View style={{ flexDirection: 'row', gap: 4 }} accessible accessibilityLabel={`Fase ${PHASES[phaseIndex(step.kind)]}, paso ${stepIdx + 1} de ${unit.steps.length}`}>
+          {PHASES.map((ph, i) => {
+            const cur = phaseIndex(step.kind);
+            return (
+              <View key={ph} style={{ flex: 1, gap: 4 }}>
+                <View style={{ height: 5, borderRadius: 3, backgroundColor: i <= cur ? found.world.color : alpha(colors.text, 0.12) }} />
+                <KText variant="caption" style={{ fontSize: 10, lineHeight: 12, fontWeight: i === cur ? '800' : '400' }} muted={i !== cur}>
+                  {ph.toUpperCase()}
+                </KText>
+              </View>
+            );
+          })}
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm }}>
+          <KataAvatar
+            size={56}
+            mood={reaction?.mood ?? (step.kind === 'intro' ? 'curioso' : step.kind === 'visual' ? 'experimentando' : hasQuestions ? 'concentrado' : 'explicando')}
+          />
+          <KText variant="caption" muted style={{ flex: 1, marginBottom: 6 }}>
+            {reaction?.text ?? `Paso ${stepIdx + 1} de ${unit.steps.length}`}
+          </KText>
+        </View>
         <KText variant="title" accessibilityRole="header">
           {step.title}
         </KText>
