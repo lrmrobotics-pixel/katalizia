@@ -48,7 +48,7 @@ Rama: `feat/katalizia-2`, fusionada en `main`.
 No se añadieron dependencias nativas, así que basta con EAS Update al APK instalado:
 
 ```bash
-npx eas-cli update --channel preview --message "KATALIZIA 2.0"
+npx eas-cli update --channel preview --environment preview --message "KATALIZIA 2.0"
 ```
 
 APK nuevo (opcional): `npx eas-cli build -p android --profile preview`. Ver `docs/RELEASE.md`.
