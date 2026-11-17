@@ -29,6 +29,8 @@ export function Kata3D({
   const dragRef = useRef(drag);
   const pan = useMemo(
     () =>
+      // Los refs solo se leen dentro de los manejadores del gesto, nunca durante el render.
+      // eslint-disable-next-line react-hooks/refs
       PanResponder.create({
         onStartShouldSetPanResponder: () => interactive,
         onMoveShouldSetPanResponder: (_, g) => interactive && Math.abs(g.dx) > 4,

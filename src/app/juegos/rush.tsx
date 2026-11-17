@@ -6,11 +6,10 @@ import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Button, Card, KText, ProgressBar, Screen } from '@/components/ui';
 import { alpha, Stage, StatPill } from '@/components/ui/scene';
 import type { CatMood } from '@/core/pet/wellbeing';
-import { CATEGORY_COLORS } from '@/theme/tokens';
 import { makeRushRound, RUSH_SECONDS, rushPoints, type RushLevel, type RushRound } from '@/core/games';
 import { useRewards } from '@/state/rewards';
 import { useStudyTimer } from '@/state/useStudyTimer';
-import { MIN_TOUCH, radius, spacing } from '@/theme/tokens';
+import { CATEGORY_COLORS, MIN_TOUCH, radius, spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
 const LEVELS: { id: RushLevel; label: string; detail: string }[] = [

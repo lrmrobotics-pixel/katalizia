@@ -62,6 +62,8 @@ function AtomNode({
   const start = useRef({ x: 0, y: 0 });
   const pan = useMemo(
     () =>
+      // Los refs solo se leen dentro de los manejadores del gesto, nunca durante el render.
+      // eslint-disable-next-line react-hooks/refs
       PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => true,

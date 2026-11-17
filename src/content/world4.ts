@@ -35,6 +35,7 @@ const tipos = unit({
   visual: [
     'Diferencia de electronegatividad (ΔEN)',
     'ΔEN ≈ 0 → covalente apolar (H–H, Cl–Cl)\nΔEN pequeña o media → covalente polar (H–Cl, O–H)\nΔEN grande (aprox. > 1,8) → mayormente iónico (Na–Cl, ΔEN = 2,23)\nOjo: el límite es una regla práctica, no una frontera exacta.',
+    'bond-polarity',
   ],
   formal: [
     'Definiciones',

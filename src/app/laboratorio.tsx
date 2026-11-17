@@ -3,7 +3,7 @@
  * con el núcleo químico de la app y declaran sus simplificaciones (no son experimentos reales).
  */
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { AtomBuilder } from '@/components/lab/AtomBuilder';
@@ -33,13 +33,11 @@ const MODULES: { id: ModuleId; name: string; icon: SciIconName; color: string; i
 /** Registra un experimento (máx. 8 por visita, para que la XP refleje práctica real). */
 function useExperimentCounter() {
   const award = useRewards((s) => s.award);
-  const [count, setCount] = useState(0);
+  const count = useRef(0);
   return useCallback(() => {
-    setCount((c) => {
-      if (c >= 8) return c;
-      award('labExperiment');
-      return c + 1;
-    });
+    if (count.current >= 8) return;
+    count.current += 1;
+    award('labExperiment');
   }, [award]);
 }
 

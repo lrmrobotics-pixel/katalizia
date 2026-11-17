@@ -126,3 +126,13 @@ describe('indicadores y energía', () => {
     expect(relativeSpeed(4 * 298)).toBeCloseTo(2);
   });
 });
+
+describe('fases de la lección', () => {
+  it('los 10 pasos se agrupan en 5 fases en orden', () => {
+    const { phaseIndex } = jest.requireActual('@/core/learning/phases') as typeof import('@/core/learning/phases');
+    const order = ['intro', 'simple', 'everyday-example', 'visual', 'formal', 'worked-example', 'guided-practice', 'independent-practice', 'quiz', 'error-review'] as const;
+    const idx = order.map((k) => phaseIndex(k));
+    expect(idx).toEqual([...idx].sort((a, b) => a - b));
+    expect(new Set(idx).size).toBe(5);
+  });
+});

@@ -7,6 +7,8 @@ import { View } from 'react-native';
 import Svg, { Circle, Line, Rect, Text as SvgText } from 'react-native-svg';
 
 import { KText } from '@/components/ui';
+
+import { AtomExplorer, BondPolarity, ReactionAnimation, ShellsExplorer } from './InteractiveVisuals';
 import { spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
@@ -162,6 +164,22 @@ const VISUALS: Record<string, { render: () => ReactElement; limits: string }> = 
   'si-prefixes': {
     render: () => <SiPrefixes />,
     limits: 'Solo se muestran los prefijos más usados en química y medicina.',
+  },
+  'atom-explorer': {
+    render: () => <AtomExplorer />,
+    limits: 'Modelo de capas con el núcleo muy agrandado; los electrones reales ocupan orbitales, no órbitas.',
+  },
+  'shells-explorer': {
+    render: () => <ShellsExplorer />,
+    limits: 'Capas de Bohr como resumen del orden de llenado; no muestra la forma de los orbitales.',
+  },
+  'bond-polarity': {
+    render: () => <BondPolarity />,
+    limits: 'La nube es un esquema cualitativo; el límite de 1,8 entre polar e iónico es una regla práctica.',
+  },
+  'reaction-anim': {
+    render: () => <ReactionAnimation />,
+    limits: 'Animación del balance de átomos; la reacción real ocurre en varios pasos y libera mucha energía.',
   },
   'ph-scale': {
     render: () => <PhScale />,

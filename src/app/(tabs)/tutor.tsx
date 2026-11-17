@@ -5,7 +5,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { KataAvatar } from '@/components/pet/KataAvatar';
 import { Chip, KText } from '@/components/ui';
 import type { CatMood } from '@/core/pet/wellbeing';
+import { router } from 'expo-router';
+
 import { getTutor } from '@/services/ai';
+import { labForText, type LabModule } from '@/services/ai/labLinks';
+import { alpha } from '@/components/ui/scene';
+import type { TutorMode } from '@/state/settings';
 import { useSettings } from '@/state/settings';
 import { useTutorChat } from '@/state/tutor';
 import { MIN_TOUCH, radius, spacing } from '@/theme/tokens';
@@ -16,7 +21,12 @@ const START = ['¿Qué es un mol?', 'Explícame el pH', 'El agua en modo chisme'
 export default function Tutor() {
   const { colors, fontSize } = useTheme();
   const tutor = getTutor();
-  const style = useSettings((s) => s.explanationStyle);
+  const baseStyle = useSettings((s) => s.explanationStyle);
+  const mode = useSettings((s) => s.tutorMode);
+  const setSettings = useSettings((s) => s.set);
+  // Chisme científico usa analogías; Profesor y Experimento usan el estilo elegido en Ajustes (sin chisme).
+  const style = mode === 'chisme' ? 'chisme' : baseStyle === 'chisme' ? 'sencilla' : baseStyle;
+  const [lab, setLab] = useState<{ module: LabModule; why: string } | null>(null);
   const { messages, add, clear } = useTutorChat();
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -33,6 +43,7 @@ export default function Tutor() {
     failures.current = /no entiendo|sigo sin/i.test(t) ? failures.current + 1 : 0;
     setBusy(true);
     setMood('pensativo');
+    setLab(mode === 'experimento' ? labForText(t) : null);
     try {
       const reply = await tutor.reply(useTutorChat.getState().messages, t, {
         style,
@@ -67,6 +78,27 @@ export default function Tutor() {
           )}
         </View>
 
+        <View style={{ flexDirection: 'row', gap: spacing.xs, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm }}>
+          {(
+            [
+              ['profesor', 'Profesor'],
+              ['experimento', 'Experimento'],
+              ['chisme', 'Chisme científico'],
+            ] as [TutorMode, string][]
+          ).map(([id, label]) => (
+            <Pressable
+              key={id}
+              onPress={() => setSettings({ tutorMode: id })}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: mode === id }}
+              style={{ flex: 1, minHeight: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 999, backgroundColor: mode === id ? colors.primary : alpha(colors.text, 0.08) }}>
+              <KText variant="caption" color={mode === id ? colors.onPrimary : colors.text} style={{ fontWeight: '800', textAlign: 'center' }}>
+                {label}
+              </KText>
+            </Pressable>
+          ))}
+        </View>
+
         <FlatList
           ref={list}
           data={messages}
@@ -92,11 +124,28 @@ export default function Tutor() {
                   borderColor: item.isAnalogy ? colors.warning : mine ? colors.primary : colors.border,
                   backgroundColor: mine ? colors.primary : colors.surface,
                 }}>
+                {item.isAnalogy && (
+                  <KText variant="caption" color={colors.warning} style={{ fontWeight: '800' }}>
+                    ANALOGÍA · no es literal
+                  </KText>
+                )}
                 <KText color={mine ? colors.onPrimary : undefined}>{item.text}</KText>
               </View>
             );
           }}
         />
+
+        {lab && (
+          <Pressable
+            onPress={() => router.push(`/laboratorio?modulo=${lab.module}`)}
+            accessibilityRole="button"
+            style={{ marginHorizontal: spacing.lg, marginBottom: spacing.sm, padding: spacing.md, borderRadius: 16, backgroundColor: alpha(colors.accent, 0.14), borderWidth: 1.5, borderColor: colors.accent }}>
+            <KText variant="caption" color={colors.accent} style={{ fontWeight: '800' }}>
+              EXPERIMENTA EN EL LABORATORIO
+            </KText>
+            <KText>{lab.why}</KText>
+          </Pressable>
+        )}
 
         <ScrollView horizontal keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: spacing.sm, paddingHorizontal: spacing.lg }} style={{ flexGrow: 0 }}>
           {suggestions.map((s) => (
