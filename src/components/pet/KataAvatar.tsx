@@ -15,7 +15,9 @@ import { kataLook } from './catSprite';
 import { Kata3D } from './Kata3D';
 import { KataCartoon } from './KataCartoon';
 import { KataPixel } from './KataPixel';
-import { useKataClock } from './useKataClock';
+import { useIsFocused } from 'expo-router';
+
+import { useKataClockRaw } from './useKataClock';
 
 export { kataNow } from './useKataClock';
 
@@ -49,7 +51,13 @@ export interface KataAvatarProps {
   animated?: boolean;
 }
 
-export function KataAvatar({
+/** Cuadros por segundo por estilo: pixel 6 (retro), 2D 15 y 3D 12 (cada cuadro 3D cuesta más). */
+const FPS: Record<KataStyle, number> = { pixel: 6, cartoon: 15, 'tres-d': 12 };
+/** Por debajo de este tamaño (vistas previas, listas) Kata se dibuja quieto. */
+const MIN_ANIMATED_SIZE = 50;
+
+function KataAvatarView({
+  screenFocused,
   mood = 'feliz',
   size = 120,
   accessoryIds,
@@ -57,16 +65,15 @@ export function KataAvatar({
   trick = null,
   interactive = false,
   animated = true,
-}: KataAvatarProps) {
+}: KataAvatarProps & { screenFocused: boolean }) {
   const { reduceMotion } = useTheme();
   const chosen = usePet((s) => s.style);
   const equipped = useRewards((s) => s.equipped);
   const style = styleOverride ?? chosen ?? 'pixel';
   const ids = useMemo(() => accessoryIds ?? Object.values(equipped), [accessoryIds, equipped]);
   const look = useMemo(() => kataLook(ids), [ids]);
-  const motion = animated && !reduceMotion;
-  // 3D y 2D se interpolan; el pixel art va a cuadros pero necesita el reloj igual.
-  const t = useKataClock(motion, style === 'tres-d' ? 20 : style === 'cartoon' ? 30 : 12);
+  const motion = animated && !reduceMotion && size >= MIN_ANIMATED_SIZE;
+  const t = useKataClockRaw(motion && screenFocused, FPS[style]);
 
   const pose = kataPose(mood, t, trick);
   const running = trick && t >= trick.startedAt && t - trick.startedAt < TRICK_SECONDS ? trick.id : null;
@@ -82,4 +89,15 @@ export function KataAvatar({
       {style === 'tres-d' && <Kata3D pose={pose} width={size} look={look} interactive={interactive} />}
     </View>
   );
+}
+
+/** Kata dentro de una pantalla: se anima solo si la pantalla está visible. */
+export function KataAvatar(props: KataAvatarProps) {
+  const focused = useIsFocused();
+  return <KataAvatarView {...props} screenFocused={focused} />;
+}
+
+/** Kata fuera de la navegación (intro): no consulta el foco de pantalla. */
+export function KataAvatarStandalone(props: KataAvatarProps) {
+  return <KataAvatarView {...props} screenFocused />;
 }

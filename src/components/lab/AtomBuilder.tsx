@@ -31,15 +31,20 @@ function nucleusPoints(count: number, radius: number) {
 
 export function AtomView({ protons, neutrons, shells, size = 260, animated = true }: { protons: number; neutrons: number; shells: number[]; size?: number; animated?: boolean }) {
   const { colors, reduceMotion } = useTheme();
-  const t = useKataClock(animated && !reduceMotion && shells.length > 0, 20);
+  const electrons = shells.reduce((a, b) => a + b, 0);
+  // Átomos grandes se dibujan quietos: cientos de partículas animadas trabarían el teléfono.
+  const t = useKataClock(animated && !reduceMotion && electrons > 0 && electrons <= 40, 12);
   const c = size / 2;
   const nucleons = protons + neutrons;
   const nr = Math.min(size * 0.16, 5 + Math.sqrt(nucleons) * 4.2);
-  const pr = Math.max(3, Math.min(7, nr / Math.sqrt(Math.max(1, nucleons)) * 1.25));
-  const pts = nucleusPoints(nucleons, nr);
+  const pr = Math.max(3, Math.min(7, (nr / Math.sqrt(Math.max(1, Math.min(nucleons, 80)))) * 1.25));
+  // Núcleos muy grandes se representan con 80 partículas como máximo (proporción p/n conservada).
+  const shown = Math.min(nucleons, 80);
+  const pts = nucleusPoints(shown, nr);
   // Protones y neutrones intercalados de forma uniforme (cuenta exacta de cada uno).
-  const kinds = Array.from({ length: nucleons }, (_, i) =>
-    Math.floor(((i + 1) * protons) / nucleons) > Math.floor((i * protons) / nucleons) ? 'p' : 'n',
+  const pShown = nucleons ? Math.round((protons * shown) / nucleons) : 0;
+  const kinds = Array.from({ length: shown }, (_, i) =>
+    Math.floor(((i + 1) * pShown) / shown) > Math.floor((i * pShown) / shown) ? 'p' : 'n',
   );
   const ring = (i: number) => nr + 14 + (i + 1) * ((c - nr - 22) / Math.max(4, shells.length));
   return (

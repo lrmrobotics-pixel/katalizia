@@ -7,10 +7,10 @@ import { PanResponder, View } from 'react-native';
 import Svg, { Ellipse, Polygon } from 'react-native-svg';
 
 import type { KataPose } from '@/core/pet/animation';
-import { render } from '@/core/render3d';
+import { mRotX, mRotY, mTranslate, mul, mulAll, renderInstances } from '@/core/render3d';
 
 import type { KataLook } from './catSprite';
-import { buildKata3D, KATA3D_BOUNDS } from './kataModel3d';
+import { KATA3D_BOUNDS, kataInstances } from './kataModel3d';
 
 export function Kata3D({
   pose,
@@ -54,17 +54,10 @@ export function Kata3D({
     const distance = 8;
     const k = (height * 0.86) / span;
     const mid = (KATA3D_BOUNDS.maxY + KATA3D_BOUNDS.minY) / 2;
-    const mesh = buildKata3D({ ...pose, yaw: pose.yaw + drag.yaw }, look);
-    // Inclinación de cámara: se aplica girando el modelo alrededor de su centro.
-    const tilted = mesh.map((f) => ({
-      ...f,
-      v: f.v.map(([x, y, z]): [number, number, number] => {
-        const c = Math.cos(drag.pitch), s = Math.sin(drag.pitch);
-        const yy = y - mid;
-        return [x, yy * c - z * s, yy * s + z * c];
-      }),
-    }));
-    return render(tilted, { distance, focal: k * distance, cx: width / 2, cy: height / 2 });
+    // Vista: giro del arrastre, centrado vertical e inclinación de cámara.
+    const view = mulAll(mRotX(drag.pitch), mTranslate([0, -mid, 0]), mRotY(drag.yaw));
+    const instances = kataInstances(pose, look).map((it) => ({ mesh: it.mesh, m: mul(view, it.m) }));
+    return renderInstances(instances, { distance, focal: k * distance, cx: width / 2, cy: height / 2 });
   }, [pose, look, drag, width, height]);
 
   return (

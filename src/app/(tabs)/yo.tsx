@@ -157,7 +157,7 @@ export default function Yo() {
                 backgroundColor: on ? alpha(colors.accent, 0.12) : alpha(colors.text, 0.05),
                 transform: [{ scale: pressed ? 0.97 : 1 }],
               })}>
-              <KataAvatar styleOverride={s.id} size={78} mood={on ? 'feliz' : 'curioso'} />
+              <KataAvatar styleOverride={s.id} size={78} mood={on ? 'feliz' : 'curioso'} animated={false} />
               <KText variant="caption" style={{ fontWeight: '800' }}>
                 {s.name}
               </KText>
@@ -222,7 +222,7 @@ export default function Yo() {
             const on = rewards.equipped[a.slot] === a.id;
             return (
               <View key={a.id} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-                <KataAvatar size={40} mood="feliz" animated={false} accessoryIds={[...Object.values(rewards.equipped).filter((id) => ACCESSORIES.find((x) => x.id === id)?.slot !== slot), a.id]} />
+                <KataAvatar size={40} mood="feliz" animated={false} styleOverride={pet.style === 'tres-d' ? 'cartoon' : undefined} accessoryIds={[...Object.values(rewards.equipped).filter((id) => ACCESSORIES.find((x) => x.id === id)?.slot !== slot), a.id]} />
                 <KText style={{ flex: 1 }}>
                   {a.name}
                   {owned ? '' : ` · ${a.price} monedas`}

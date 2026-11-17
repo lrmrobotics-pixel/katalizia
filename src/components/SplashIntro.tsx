@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { KataAvatar } from '@/components/pet/KataAvatar';
+import { KataAvatarStandalone as KataAvatar } from '@/components/pet/KataAvatar';
 import { KText } from '@/components/ui';
 import { spacing } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';

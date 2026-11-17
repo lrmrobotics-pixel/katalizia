@@ -99,11 +99,11 @@ export function cone(base: Vec3, radius: number, tip: Vec3, color: string, seg =
   const w = cross(axis, u);
   const ring = Array.from({ length: seg }, (_, i): Vec3 => {
     const t = (i / seg) * Math.PI * 2;
-    return add(base, add(mul(u, Math.cos(t) * radius), mul(w, Math.sin(t) * radius)));
+    return add(base, add(scaleVec(u, Math.cos(t) * radius), scaleVec(w, Math.sin(t) * radius)));
   });
   const faces: Mesh = ring.map((p, i) => ({ v: [p, ring[(i + 1) % seg], tip], color, ...extra }));
   faces.push({ v: [...ring].reverse(), color, ...extra });
-  const centroid = mul(add(mul(base, 3), tip), 0.25);
+  const centroid = scaleVec(add(scaleVec(base, 3), tip), 0.25);
   return fixWinding(faces, centroid);
 }
 
@@ -116,9 +116,9 @@ export function torus(center: Vec3, R: number, r: number, normalDir: Vec3, color
   const pt = (i: number, j: number): Vec3 => {
     const a = (i / seg) * Math.PI * 2;
     const b = (j / tube) * Math.PI * 2;
-    const dir = add(mul(u, Math.cos(a)), mul(w, Math.sin(a)));
-    const ringC = add(center, mul(dir, R));
-    return add(ringC, add(mul(dir, r * Math.cos(b)), mul(n, r * Math.sin(b))));
+    const dir = add(scaleVec(u, Math.cos(a)), scaleVec(w, Math.sin(a)));
+    const ringC = add(center, scaleVec(dir, R));
+    return add(ringC, add(scaleVec(dir, r * Math.cos(b)), scaleVec(n, r * Math.sin(b))));
   };
   const faces: Mesh = [];
   for (let i = 0; i < seg; i++) {
@@ -126,7 +126,7 @@ export function torus(center: Vec3, R: number, r: number, normalDir: Vec3, color
       const v = [pt(i, j), pt(i + 1, j), pt(i + 1, j + 1), pt(i, j + 1)];
       // Orientación hacia fuera respecto al centro del tubo.
       const a = (i + 0.5) / seg * Math.PI * 2;
-      const tubeC = add(center, mul(add(mul(u, Math.cos(a)), mul(w, Math.sin(a))), R));
+      const tubeC = add(center, scaleVec(add(scaleVec(u, Math.cos(a)), scaleVec(w, Math.sin(a))), R));
       const face = { v, color };
       faces.push(dot(faceNormal(v), sub(centroidOf(v), tubeC)) < 0 ? { ...face, v: [...v].reverse() } : face);
     }
@@ -142,7 +142,7 @@ export function disc(center: Vec3, radius: number, normalDir: Vec3, color: strin
   const w = cross(n, u);
   const v = Array.from({ length: seg }, (_, i): Vec3 => {
     const t = (i / seg) * Math.PI * 2;
-    return add(center, add(mul(u, Math.cos(t) * radius), mul(w, Math.sin(t) * radius)));
+    return add(center, add(scaleVec(u, Math.cos(t) * radius), scaleVec(w, Math.sin(t) * radius)));
   });
   const face: Face = { v, color, ...extra };
   return [dot(faceNormal(v), n) < 0 ? { ...face, v: [...v].reverse() } : face];
@@ -164,10 +164,10 @@ export function box(center: Vec3, size: Vec3, color: string): Mesh {
   return fixWinding(quads.map((v) => ({ v, color })), center);
 }
 
-const mul = (a: Vec3, k: number): Vec3 => [a[0] * k, a[1] * k, a[2] * k];
+const scaleVec = (a: Vec3, k: number): Vec3 => [a[0] * k, a[1] * k, a[2] * k];
 export function centroidOf(v: Vec3[]): Vec3 {
   const s = v.reduce((acc, p) => add(acc, p), [0, 0, 0] as Vec3);
-  return mul(s, 1 / v.length);
+  return scaleVec(s, 1 / v.length);
 }
 
 /** Asegura que todas las normales apuntan hacia fuera de un sólido convexo. */
@@ -249,5 +249,124 @@ export function render(mesh: Mesh, cam: Camera, opts: RenderOptions = {}): Rende
     });
   }
   // Pintor: primero lo más lejano.
+  return out.sort((a, b) => b.depth - a.depth);
+}
+
+// ── Render rápido por instancias (geometría fija + matriz por pieza) ────
+//
+// La geometría se teselea una sola vez; en cada cuadro solo se multiplica cada vértice
+// por la matriz afín de su pieza. Evita crear miles de objetos por cuadro en el teléfono.
+
+/** Matriz afín 3×4 por filas: [r00 r01 r02 tx  r10 r11 r12 ty  r20 r21 r22 tz]. */
+export type Mat = number[];
+
+export const IDENTITY: Mat = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0];
+
+/** a·b (primero se aplica b). */
+export function mul(a: Mat, b: Mat): Mat {
+  const o = new Array<number>(12);
+  for (let r = 0; r < 3; r++) {
+    const a0 = a[r * 4], a1 = a[r * 4 + 1], a2 = a[r * 4 + 2];
+    o[r * 4] = a0 * b[0] + a1 * b[4] + a2 * b[8];
+    o[r * 4 + 1] = a0 * b[1] + a1 * b[5] + a2 * b[9];
+    o[r * 4 + 2] = a0 * b[2] + a1 * b[6] + a2 * b[10];
+    o[r * 4 + 3] = a0 * b[3] + a1 * b[7] + a2 * b[11] + a[r * 4 + 3];
+  }
+  return o;
+}
+
+export const mulAll = (...ms: Mat[]) => ms.reduce((acc, m) => mul(acc, m), IDENTITY);
+
+export function mRotX(a: number): Mat {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0];
+}
+export function mRotY(a: number): Mat {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0];
+}
+export function mRotZ(a: number): Mat {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0];
+}
+export const mTranslate = (t: Vec3): Mat => [1, 0, 0, t[0], 0, 1, 0, t[1], 0, 0, 1, t[2]];
+export const mScale = (k: Vec3): Mat => [k[0], 0, 0, 0, 0, k[1], 0, 0, 0, 0, k[2], 0];
+/** Aplica `m` alrededor de un pivote. */
+export const mAround = (pivot: Vec3, m: Mat): Mat => mulAll(mTranslate(pivot), m, mTranslate([-pivot[0], -pivot[1], -pivot[2]]));
+
+export function applyMat(m: Mat, p: Vec3): Vec3 {
+  return [
+    m[0] * p[0] + m[1] * p[1] + m[2] * p[2] + m[3],
+    m[4] * p[0] + m[5] * p[1] + m[6] * p[2] + m[7],
+    m[8] * p[0] + m[9] * p[1] + m[10] * p[2] + m[11],
+  ];
+}
+
+export interface Instance {
+  mesh: Mesh;
+  m: Mat;
+}
+
+/** Aplana instancias a una malla normal (para pruebas y exportación). */
+export const flatten = (instances: Instance[]): Mesh =>
+  instances.flatMap(({ mesh, m }) => mesh.map((f) => ({ ...f, v: f.v.map((p) => applyMat(m, p)) })));
+
+const shadeCache = new Map<string, string>();
+function shadeCached(hex: string, k: number): string {
+  const key = `${hex}|${k.toFixed(3)}`;
+  let v = shadeCache.get(key);
+  if (!v) {
+    v = shade(hex, k);
+    shadeCache.set(key, v);
+  }
+  return v;
+}
+
+const r1 = (x: number) => Math.round(x * 10) / 10;
+
+/** Versión rápida de `render` para instancias. Mismo resultado visual. */
+export function renderInstances(instances: Instance[], cam: Camera, opts: RenderOptions = {}): RenderedPolygon[] {
+  const light = normalize(opts.light ?? [-0.5, 0.8, 0.9]);
+  const ambient = opts.ambient ?? 0.42;
+  const bands = opts.bands ?? 4;
+  const out: RenderedPolygon[] = [];
+  const xs: number[] = [], ys: number[] = [], zs: number[] = [];
+  for (const { mesh, m } of instances) {
+    for (const f of mesh) {
+      const n = f.v.length;
+      let cx = 0, cy = 0, cz = 0;
+      for (let i = 0; i < n; i++) {
+        const p = f.v[i];
+        const x = m[0] * p[0] + m[1] * p[1] + m[2] * p[2] + m[3];
+        const y = m[4] * p[0] + m[5] * p[1] + m[6] * p[2] + m[7];
+        const z = m[8] * p[0] + m[9] * p[1] + m[10] * p[2] + m[11];
+        xs[i] = x; ys[i] = y; zs[i] = z;
+        cx += x; cy += y; cz += z;
+      }
+      cx /= n; cy /= n; cz /= n;
+      // Normal con los tres primeros vértices.
+      const ux = xs[1] - xs[0], uy = ys[1] - ys[0], uz = zs[1] - zs[0];
+      const vx = xs[2] - xs[0], vy = ys[2] - ys[0], vz = zs[2] - zs[0];
+      let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+      const len = Math.hypot(nx, ny, nz) || 1;
+      nx /= len; ny /= len; nz /= len;
+      if (nx * -cx + ny * -cy + nz * (cam.distance - cz) <= 0) continue;
+      let k = 1;
+      if (!f.unlit) {
+        let diff = Math.max(0, nx * light[0] + ny * light[1] + nz * light[2]);
+        if (bands > 0) diff = Math.round(diff * bands) / bands;
+        k = ambient + (1 - ambient) * diff * 1.08;
+      }
+      let pts = '';
+      let depth = 0;
+      for (let i = 0; i < n; i++) {
+        const zz = cam.distance - zs[i];
+        const kk = cam.focal / Math.max(0.01, zz);
+        pts += `${i ? ' ' : ''}${r1(cam.cx + xs[i] * kk)},${r1(cam.cy - ys[i] * kk)}`;
+        depth += zz;
+      }
+      out.push({ points: pts, fill: shadeCached(f.color, k), opacity: f.opacity ?? 1, depth: depth / n });
+    }
+  }
   return out.sort((a, b) => b.depth - a.depth);
 }
