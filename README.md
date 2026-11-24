@@ -36,3 +36,7 @@ Los datos se guardan en el dispositivo; la sincronización en la nube es opciona
 
 Ver [docs/RELEASE.md](docs/RELEASE.md): APK por EAS Build (enlace para WhatsApp) y EAS Update
 (la app se actualiza sola al cerrarla y volver a abrirla).
+
+## Licencia
+
+Código abierto bajo licencia [MIT](LICENSE). ¡Las contribuciones son bienvenidas!
